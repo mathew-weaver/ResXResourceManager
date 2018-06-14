@@ -82,7 +82,40 @@
         {
             Contract.Ensures(Contract.Result<XDocument>() != null);
 
-            return XDocument.Load(FilePath);
+            try
+            {
+                if (Extension.Equals(".json"))
+                {
+                    var json = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText(FilePath));
+
+                    var root = new XElement("root");
+
+                    foreach (var prop in json.Properties())
+                    {
+                        var data = new XElement("data");
+
+                        var name = new XAttribute("name", prop.Name);
+                        data.Add(name);
+
+                        var value = new XElement("value", prop.Value.ToString());
+                        data.Add(value);
+
+                        root.Add(data);
+                    }
+
+                    var document = new XDocument();
+                    document.Add(root);
+                    return document;
+                }
+                else
+                {
+                    return XDocument.Load(FilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FileLoadException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unable to parse '{0}'", FilePath), ex);
+            }
         }
 
         public void Changed([CanBeNull] XDocument document, bool willSaveImmediately)
@@ -116,7 +149,28 @@
         {
             Contract.Requires(document != null);
 
-            document.Save(FilePath);
+            try
+            {
+                if (Extension.Equals(".json"))
+                {
+                    var json = new Newtonsoft.Json.Linq.JObject();
+                    foreach (var data in document.Root.Elements())
+                    {
+                        var name = data.GetAttribute("name");
+                        var value = (XElement)data.FirstNode;
+                        json.Add(name, new Newtonsoft.Json.Linq.JValue(value.Value));
+                    }
+                    File.WriteAllText(FilePath, json.ToString());
+                }
+                else
+                {
+                    document.Save(FilePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FileLoadException(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Unable to save '{0}'", FilePath), ex);
+            }
         }
 
         /// <summary>

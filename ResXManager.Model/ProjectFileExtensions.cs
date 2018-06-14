@@ -14,9 +14,10 @@
     {
         private const string Resx = ".resx";
         private const string Resw = ".resw";
+        private const string Json = ".json";
         [NotNull]
         [ItemNotNull]
-        public static readonly string[] SupportedFileExtensions = { Resx, Resw };
+        public static readonly string[] SupportedFileExtensions = { Resx, Resw, Json };
 
         [NotNull]
         public static string GetBaseDirectory([NotNull] this ProjectFile projectFile)
@@ -42,6 +43,8 @@
 
             if (!SupportedFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
                 return false;
+
+            if (Json.Equals(extension)) return Path.GetFileName(filePath).StartsWith("lang_", StringComparison.OrdinalIgnoreCase);
 
             if (!Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 return true;
@@ -86,6 +89,20 @@
                 return Equals(configuration.NeutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
             }
 
+            if (Json.Equals(extension, StringComparison.OrdinalIgnoreCase))
+            {
+                var cultureName = Path.GetFileNameWithoutExtension(filePath).Split(new char[] { '_' })[1];
+
+                if (cultureName.Equals("en")) return CultureKey.Neutral;
+
+                if (!ResourceManager.IsValidLanguageName(cultureName))
+                    throw new ArgumentException(@"Invalid file. File name does not conform to the pattern '.\<cultureName>\<basename>.resw'");
+
+                var culture = cultureName.ToCulture();
+
+                return Equals(configuration.NeutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
+            }
+
             throw new InvalidOperationException("Unsupported file format: " + extension);
         }
 
@@ -97,6 +114,12 @@
 
             var extension = projectFile.Extension;
             var filePath = projectFile.FilePath;
+
+            if (Json.Equals (extension, StringComparison.OrdinalIgnoreCase))
+            {
+                var parts = Path.GetFileNameWithoutExtension(filePath).Split(new char[] { '_' });
+                return ResourceManager.IsValidLanguageName(parts[1]) ? parts[0] : Path.GetFileNameWithoutExtension(filePath);
+            }
 
             if (!Resx.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 return Path.GetFileNameWithoutExtension(filePath);

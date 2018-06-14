@@ -4,7 +4,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("ResXManager")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Modified by EarthSoft")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

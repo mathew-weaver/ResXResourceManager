@@ -17,13 +17,13 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -31,7 +31,6 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://clickonce-tom-englert.azurewebsites.net/ResXResourceManager/</InstallUrl>
     <SupportUrl>https://github.com/tom-englert/ResXResourceManager</SupportUrl>
     <ProductName>ResX Resource Manager</ProductName>
     <PublisherName>tom-englert.de</PublisherName>
@@ -65,7 +64,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
@@ -79,9 +78,11 @@
   <PropertyGroup>
     <ManifestCertificateThumbprint>651F02F6AD0F19DE5BC82F07FFD8223A83696F69</ManifestCertificateThumbprint>
   </PropertyGroup>
+  <!--
   <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
     <ManifestKeyFile>ResXManager_Key.pfx</ManifestKeyFile>
   </PropertyGroup>
+  -->
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
@@ -220,7 +221,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="ResXManager_Key.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResXManager.Infrastructure\ResXManager.Infrastructure.csproj">
@@ -314,9 +314,11 @@
     </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--
   <Target Name="BeforeBuild">
     <Exec ContinueOnError="false" Command="&quot;$(SolutionDir)packages\Brutal.Dev.StrongNameSigner.1.8.0\tools\StrongNameSigner.Console.exe&quot; -in &quot;$(SolutionDir)packages\WindowsAPICodePack-Core.1.1.1|$(SolutionDir)packages\WindowsAPICodePack-Shell.1.1.1&quot; -k &quot;$(SolutionDir)key.snk&quot;" />
   </Target>
+  -->
   <Target Name="AfterPublish">
     <ItemGroup>
       <ZipFiles Include="$(PublishDir)*.*" />

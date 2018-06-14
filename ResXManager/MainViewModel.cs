@@ -58,6 +58,16 @@
             {
                 var folder = Settings.Default.StartupFolder;
 
+                var args = System.Environment.GetCommandLineArgs();
+                if (args.Length > 1)
+                {
+                    var f = args[1].Trim(new char[] { '"','\'','/','\\'});
+                    if (!Directory.Exists(f))
+                        _tracer.TraceWarning("Directory does not exist: " + f);
+                    else
+                        folder = f;
+                }
+
                 if (string.IsNullOrEmpty(folder))
                     return;
 
